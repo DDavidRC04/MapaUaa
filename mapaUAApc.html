@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html >
+	<head>
+		<title>UAA Mapa</title>
+		<script src="JS/scripts.js" type="text/javascript"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<link rel="stylesheet" type="text/css" href="StyleSheetPC.css">
+
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<script>
+
+			$(document).ready(
+				function(){
+			   	    $("#barraNav").hover(
+				    	function(){
+				        	$("#barraNav").animate({opacity: '1'}, "slow");
+				    	},function(){
+				    		$("#barraNav").animate({opacity: '.5'}, "slow");
+				    	}
+				    );
+				    $("#resultsDisplay").css("height",function(){
+							var alturaNav = $(window).height();
+							return alturaNav-67;
+						}
+					);
+					$("#resultsDisplay").slideUp("fast");
+					//$('#myModal').modal('handleUpdate')
+					$('html').click(function (e) {
+					    if(!$('#resultsDisplay').is(':visible')){
+					    	if (e.target.id == "btnBusqueda" || e.target.closest("#btnBusqueda")) {
+					    		$("#resultsDisplay").slideUp("slow");
+						        $("#resultsDisplay").slideDown("slow");
+						        var Build = $('#searchBuild').val();
+
+						        Build.toUpperCase();
+						        var url = "procesar_datos.php";	
+						        url = "resultado.php";
+						        $.ajax({
+						        	type:"POST",
+						        	url: url,
+						        	data: {nombre: Build},
+						        	success:function(res){
+						        		$("#resultadosDis").html(res)
+						        	}
+						        })
+					    }
+					    }else{
+					    	if (e.target.id == "btnBusqueda" || e.target.closest("#btnBusqueda")) {
+					    		//realiza busqueda nueva en caso de que ya halla realizado alguna
+					    		
+					    	}else{
+					    		if(e.target.id != "busquedaInput" && e.target.id != "btnBusqueda" && e.target.id != "resultsDisplay"){				 
+										var Build = ""
+										if($(event.target).attr('id') == "resultado2"){
+											Build = "57A-B"
+										}else if($(event.target).attr('id') == "resultado3"){
+											Build = "57C"
+										}else if($(event.target).attr('id') == "nombreEd"){
+											Build = "no"
+										}else{
+											var Build = $('#searchBuild').val();
+											if(Build == "54")
+												Build = Build+"H-I"
+											Build.toUpperCase();
+										}	
+				    					if ($(event.target).hasClass('resultado') && Build != "no"){
+								        var url = "procesar_datos.php";
+								        $.ajax({
+								        	type:"POST",
+								        	url: url,
+								        	data: {nombre: Build},
+								        	success:function(res){
+								        		$("#mostrar_datos").html(res)
+								        	}
+								        })
+								        url = "imgBuild.php";
+								        $.ajax({
+								        	type:"POST",
+								        	url: url,
+								        	data: {nombre: Build},
+								        	success:function(res){
+								        		$("#imageBuild").html(res)
+								        	}
+								        })
+							    		$('.modal').modal('show');
+							    	}else if( $(event.target).parents().hasClass('resultado') && Build != "no"){
+								        var url = "procesar_datos.php";
+								        $.ajax({
+								        	type:"POST",
+								        	url: url,
+								        	data: {nombre: Build},
+								        	success:function(res){
+								        		$("#mostrar_datos").html(res)
+								        	}
+								        })
+								        url = "imgBuild.php";
+								        $.ajax({
+								        	type:"POST",
+								        	url: url,
+								        	data: {nombre: Build},
+								        	success:function(res){
+								        		$("#imageBuild").html(res)
+								        	}
+								        })
+							    		$('.modal').modal('show');
+							    	}else{
+							    		if( !($(event.target).hasClass('modal')) && $('.modal').is(':hidden') && $('#resultsDisplay').is(':visible') && Build != "no"){
+											$("#resultsDisplay").slideUp("slow");
+							    		}
+							    	}
+
+							    }
+					    	}
+					    }
+					});
+
+					$(".resultado").hover(
+				    	function(e){
+				    		var objetivo = "#" + e.target.id;
+							$(objetivo).animate({opacity: '1'}, "slow");		
+				    	},function(){
+				    		$(".resultado").animate({opacity: '.7'}, "slow");
+				    	}
+				    );
+		    	//zoom*************************************************************
+				var ventana_ancho = $(window).width();						//obtiene el tamano de la ventana para crear el #contenedor delimitador
+				var ventana_alto = $(window).height();						//del mapa, modificando el tamano y posicion del #contenedor
+				var mapa_ancho = $("#mapa").width();
+				var mapa_alto = $("#mapa").height();
+				
+				var contenedor_x=mapa_ancho-ventana_ancho;
+				var contenedor_y=mapa_alto-ventana_alto;
+					
+				var contenedor_ancho=mapa_ancho+(contenedor_x);
+				var contenedor_alto=mapa_alto+(contenedor_y);
+				$("#contenedor").css("width",contenedor_ancho+"px");
+				$("#contenedor").css("height",contenedor_alto+"px");
+
+				$("#contenedor").css("left","-"+contenedor_x+"px");
+				$("#contenedor").css("top","-"+contenedor_y+"px");
+
+				$("#aumentar").click(function(){							//Zoom aumentar
+					
+					hei=getHeight();
+					
+					if(hei<=1575){
+						areaSizeM();
+						$("#mapa").animate({
+							height:"+=100",
+							width:"+=100"
+						});
+						mapa_ancho+=100;
+						mapa_alto+=100;
+						
+						var aumento1=0;
+						var aumento2=0;										// variables para saber cuanto debe incrementar el #contenedor
+						
+						if (mapa_ancho-100<ventana_ancho) {
+							aumento1=100;
+						}else{
+							aumento1=200;
+						}
+
+						if (mapa_alto-100<ventana_alto) {
+							aumento2=100;
+						}else{
+							aumento2=200;
+						}
+						$("#contenedor").animate({
+							height:"+="+aumento2,
+							width:"+="+aumento1,
+							top:"-=100",
+							left:"-=100"
+						});
+						contenedor_ancho+=aumento1;
+						contenedor_alto+=aumento2;	
+					}
+					//alert("ventana_ancho: "+ventana_ancho+" mapa_ancho: "+mapa_ancho);
+				});
+				$("#reducir").click(function(){								//Zoom reducir
+					h=getHeight();
+					
+
+
+					
+
+
+					if(h>=975){
+						areaSizeL();
+						var top_mapa=getTop();
+						var top_limite=contenedor_alto-mapa_alto;
+						if (top_mapa>=(top_limite-100)) {
+
+							$("#mapa").animate({
+								height:"-=100",
+								width:"-=100",
+								top:"-=100"
+							});
+						}else{
+							$("#mapa").animate({
+								height:"-=100",
+								width:"-=100"
+							});
+						}
+
+						mapa_ancho-=100;
+						mapa_alto-=100;
+
+						var decremento1=0;
+						var decremento2=0;										// variables para saber cuanto debe decrementar el #contenedor
+
+						if (contenedor_ancho-200<mapa_ancho) {
+							decremento1=100;
+						}else{
+							decremento1=200;
+						}
+
+						if (contenedor_alto-200<mapa_alto) {
+							decremento2=100;
+						}else{
+							decremento2=200;
+						}
+						
+						$("#contenedor").animate({
+							height:"-="+decremento2,
+							width:"-="+decremento1,
+							top:"+=100",
+							left:"+=100"
+						});
+						contenedor_ancho-=decremento1;
+						contenedor_alto-=decremento2;
+					}
+					//alert("ventana_ancho: "+ventana_ancho+" mapa_ancho: "+mapa_ancho);
+				});
+
+				$("#mapa").draggable({										//Mapa arrastrable
+					containment: "#contenedor"								//limite del arrastre
+				});
+
+				function getHeight(){
+					var tamH=$("#mapa").css("height");			//tamH,taH,tH = tamano height
+					var taH=tamH.slice(0,tamH.search("px"));
+					var tH=Number(taH);
+					return tH;
+				}
+				function getTop(){
+					var tamT=$("#mapa").css("top");			//tamT,taT,tT = tamano top
+					var taT=tamT.slice(0,tamT.search("px"));
+					var tT=Number(taT);
+					return tT;
+				}
+				}	
+			);
+			
+		</script>
+	</head>
+
+	<body>		
+		<div class="container-fluid"><!--  Area del Mapa  -->
+			<div id="contenedor">
+				<img id="mapa" class="ui-widget-content" usemap="#myMap" src="uaa_map5.png" alt="jajaj">
+				<map id="myMap" name="myMap">
+					<area shape="rect" coords="724,792,763,818" onclick="busqueda_clic('54H-I');" id="54H-I">
+					<area shape="rect" coords="1164,592,1194,609" onclick="busqueda_clic('117');" id="117">
+					<area shape="rect" coords="605,760,616,782" onclick="busqueda_clic('57A-B');" id="57A-B">
+					<area shape="rect" coords="606,736,616,756" onclick="busqueda_clic('57C');" id="57C">		
+				</map>
+			</div>
+			<nav class="navbar" id="barraNav"><!-- Barra de Navegacion -->
+				<div class="navbar-header">
+					<div class="container-fluid">
+						<a class="navbar-brand" href="http://www.uaa.mx">
+					    	<img alt="Uaa Mapa" src="logoOficial.png" height="66">
+					    </a>
+					</div>
+				</div>
+				<div class="navbar-right">
+					<div class="container-fluid">
+						<form class="navbar-form" onsubmit="return false;" id="formBusqueda">
+					        <div class="form-group">
+					          	<input type="text" class="form-control" placeholder="#edificio" id="searchBuild" name="searchBuild" size="25" required="true">
+					          	<button class="btn btn-busqueda" id="btnBusqueda">
+									<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+								</button> 
+					        </div> 
+					    </form>
+					</div>	    
+				</div>
+			</nav>					
+			<nav id="resultsDisplay">
+				<div id="resultadosDis"></div>
+			</nav>
+			<div id="btnZoom">
+				<ul>
+					<li>
+						<button id="aumentar" class="btn btn-in" ><span class="glyphicon glyphicon-zoom-in"></span></button>
+					</li>
+					<li>
+						<button id="reducir" class="btn btn-out" ><span class="glyphicon glyphicon-zoom-out"></span></button>
+					</li>
+				</ul>
+			</div>			
+			<!-- Informacion Detallada del Edificio-->
+			<div class="modal faded" id="infoDetallada" tabindex="-1" role="dialog" aria-labelledby="infoDetalladaLabel" >
+		        <div class="modal-dialog" role="document">
+		            <div class="modal-content">
+		                <div class="modal-header">
+		        	        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+		                        <!-- Indicators -->
+		            	        <ol class="carousel-indicators">
+		                          <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+		                          <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+		                          <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+		                        </ol>
+
+		                        <!-- Wrapper for slides -->
+		                        
+		                        <div class="carousel-inner" role="listbox" id="imageBuild"></div>
+
+		                        <!-- Controls -->
+		                        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+			                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+			                        <span class="sr-only">Previous</span>
+		                        </a>
+		                        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+			                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+			                        <span class="sr-only">Next</span>
+		                        </a>
+		                    </div>
+		                </div>
+		                <div class="modal-body">
+		                    <div id="descripcionCorta">
+			                    <p>Esto es una descripcion de un departamento que describe a personas describiendo alumnos que 
+			                    describen a descriptores de descripciones de un descriptor </p>
+		                    </div>
+
+		                    <div class="panel-group" id="Departamentos" role="tablist" aria-multiselectable="true">  	
+		                      	<div class="panel" >
+			                        <div id="mostrar_datos"></div>	
+		                        </div>
+		                    </div>
+
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+
+	</body>
+
+</html>

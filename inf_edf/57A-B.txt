@@ -1,0 +1,5 @@
+Edificio 57A-B
+Laboratorio:  Electronica 
+Descripcion: Laboratorios de Electronica Digital y Analogica, se imparten materias de la academia de Hardware. Ademas, se imparten cursos de extension para niños como Construccion de Robots Lego.
+Horario: 08:00 – 20:00
+Responsables: Ing. Ericka Hernandez

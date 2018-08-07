@@ -1,0 +1,5 @@
+Edificio 54 H-I
+Laboratorio:  Computo – Redes 
+Descripcion: Se imparten materias de las academias de Software de Base y Programacion de Sistemas, asi como de la academia de Redes y Sistemas Distribuidos.
+Horario: 08:00 – 21:00
+Responsables: Ing. Francisco Javier Esparza, Ing. Francisco Bernal Plascencia

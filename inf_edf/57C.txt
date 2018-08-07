@@ -1,0 +1,7 @@
+Edificio 57C
+Laboratorio:  Computo
+Descripcion: Laboratorio de Cómputo enfocado a materias de la academia de Hardware
+Horario: 08:00 – 20:00
+Responsables: Tec. Liliana Roberto
+Cubiculos: Ing. Blanca Estrada Renteria, 
+M.I. Georgina Salazar Partida (profesoras de la academia de Software de Base y Programacion de Sistemas)

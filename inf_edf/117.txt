@@ -1,0 +1,7 @@
+Edificio 117
+Laboratorio:  Electronica 
+Descripcion: Laboratorio de Control y Comunicaciones
+Horario: 08:00 – 20:00
+Responsables: Tec. Leopoldo Vazquez
+Cubiculos: Dr. Luis Alejandro Flores, Dr. Alejandro Roman Loera, 
+M.C. Gabriel Domínguez (profesores de la academia de Hardware)
